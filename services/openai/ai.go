@@ -32,7 +32,7 @@ func Run(Content string) string {
 
 	if err != nil {
 		fmt.Printf("ChatCompletion error: %v\n", err)
-		return "Chi Haja makhdamach a bro"
+		return "Please set the OPENAI_KEY environment variable"
 	}
 
 	return resp.Choices[0].Message.Content
