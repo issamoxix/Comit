@@ -1,39 +1,58 @@
 package ai
 
 import (
-	config "commit_helper/services/utils"
-	"context"
+	"bytes"
+	"encoding/json"
 	"fmt"
-
-	"github.com/sashabaranov/go-openai"
+	"io"
+	"net/http"
 )
 
-func Run(Content string) string {
-	client := openai.NewClient(config.Envs.OpenAiKey)
-	var gptContext string
+type commitResponse struct {
+	Message string `json:"message"`
+}
 
-	gptContext = "You are a Senior Software Engineer. Give me multiple  commit messages for these changes following the best practices (The Conventional Commits)"
-	resp, err := client.CreateChatCompletion(
-		context.Background(),
-		openai.ChatCompletionRequest{
-			Model: openai.GPT3Dot5Turbo,
-			Messages: []openai.ChatCompletionMessage{
-				{
-					Role:    openai.ChatMessageRoleSystem,
-					Content: gptContext,
-				},
-				{
-					Role:    openai.ChatMessageRoleUser,
-					Content: Content,
-				},
-			},
-		},
-	)
+type RequestData struct {
+	Code string `json:"code"`
+}
 
-	if err != nil {
-		fmt.Printf("ChatCompletion error: %v\n", err)
-		return "Please set the OPENAI_KEY environment variable"
+func GetCommitMessage(content string) string {
+	url := "http://comit.issamcloud.com"
+
+	payload := RequestData{
+		Code: content,
 	}
 
-	return resp.Choices[0].Message.Content
+	jsonData, err := json.Marshal(payload)
+	if err != nil {
+		fmt.Println("Error encoding JSON:", err)
+		return "Error: " + err.Error()
+	}
+
+	resp, err := http.Post(url, "application/json", bytes.NewBuffer(jsonData))
+
+	if err != nil {
+		fmt.Println(err)
+		return "Error: " + err.Error()
+	}
+
+	if resp.StatusCode != 200 {
+		fmt.Println("Error: " + resp.Status)
+		return "Error: " + resp.Status
+	}
+
+	defer resp.Body.Close()
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Println(err)
+		return "Error: " + err.Error()
+	}
+
+	var data commitResponse
+	if err := json.Unmarshal(body, &data); err != nil {
+		fmt.Println(err)
+		return "Error: " + err.Error()
+	}
+	return data.Message
 }

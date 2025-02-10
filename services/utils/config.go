@@ -8,6 +8,7 @@ import (
 
 type Config struct {
 	OpenAiKey string
+	ApiUrl    string
 }
 
 var Envs = initConfig()
@@ -16,6 +17,7 @@ func initConfig() Config {
 	godotenv.Load()
 	return Config{
 		OpenAiKey: getEnv("OPENAI_KEY", "XXX-XXXX-XXX"),
+		ApiUrl:    getEnv("API_URL", "http://localhost:8000/"),
 	}
 }
 
