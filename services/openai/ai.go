@@ -17,7 +17,7 @@ type RequestData struct {
 }
 
 func GetCommitMessage(content string) string {
-	url := "http://comit.issamcloud.com"
+	url := "https://comit.issamcloud.com"
 
 	payload := RequestData{
 		Code: content,
