@@ -11,6 +11,7 @@ type Config struct {
 	ApiUrl    string
 }
 
+var Version = "0.3"
 var Envs = initConfig()
 
 func initConfig() Config {

@@ -13,7 +13,6 @@ import (
 )
 
 var UpdateLink = "https://github.com/issamoxix/Comit/releases/download/%s/%s"
-var Version = "0.2"
 
 func selfUpdate() error {
 	fmt.Println("Checking for updates...")
@@ -57,7 +56,7 @@ func main() {
 	}
 
 	if len(os.Args) > 1 && os.Args[1] == "version" {
-		fmt.Printf("Version: %s", Version)
+		fmt.Printf("Version: %s", utils.Version)
 		return
 	}
 

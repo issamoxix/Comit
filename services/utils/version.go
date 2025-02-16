@@ -14,25 +14,25 @@ func GetVersion() string {
 	url := "https://comit.issamcloud.com"
 	resp, err := http.Get(url)
 	if err != nil {
-		return "0.2"
+		return Version
 	}
 
 	if resp.StatusCode != 200 {
-		return "0.2"
+		return Version
 	}
 
 	defer resp.Body.Close()
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return "0.2"
+		return Version
 	}
 
 	var versionResponse VersionResponse
 	err = json.Unmarshal(body, &versionResponse)
 
 	if err != nil {
-		return "0.2"
+		return Version
 	}
 	return versionResponse.Version
 }
