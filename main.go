@@ -62,6 +62,10 @@ func main() {
 
 	cmd := exec.Command("git", "--no-pager", "diff", "--staged")
 	output, err := cmd.Output()
+	if len(string(output)) == 0 {
+		fmt.Println("No staged changes found.\nPlease stage your changes and try again.")
+		return
+	}
 	commitMessage := ai.GetCommitMessage(string(output))
 	if err != nil {
 		fmt.Println(err)
