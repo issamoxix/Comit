@@ -11,7 +11,7 @@ type VersionResponse struct {
 }
 
 func GetVersion() string {
-	url := "https://comit.issamcloud.com"
+	url := "https://comit.issamcloud.com/version"
 	resp, err := http.Get(url)
 	if err != nil {
 		return Version
