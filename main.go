@@ -60,6 +60,11 @@ func main() {
 		return
 	}
 
+	if len(os.Args) > 1 && os.Args[1] == "-b" {
+		ai.GetBranchNames(os.Args[2])
+		return
+	}
+
 	cmd := exec.Command("git", "--no-pager", "diff", "--staged")
 	output, err := cmd.Output()
 	if len(string(output)) == 0 {
