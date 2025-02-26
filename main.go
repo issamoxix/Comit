@@ -65,6 +65,11 @@ func main() {
 		return
 	}
 
+	if len(os.Args) > 1 && os.Args[1] == "help" {
+		fmt.Println("Usage: comit [command]\nCommands: \n\tupdate   : To update the app\n\tversion  : To see the version of the app\n\t-b       : To generate branch name\n\thelp     : To see this help message")
+		return
+	}
+
 	cmd := exec.Command("git", "--no-pager", "diff", "--staged")
 	output, err := cmd.Output()
 	if len(string(output)) == 0 {
@@ -76,6 +81,7 @@ func main() {
 		fmt.Println("Something went wrong please try again")
 		return
 	}
+
 	if err != nil {
 		fmt.Println(err)
 		return
