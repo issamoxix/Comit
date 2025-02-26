@@ -71,12 +71,14 @@ func main() {
 		fmt.Println("No staged changes found.\nPlease stage your changes and try again.")
 		return
 	}
-	commitMessage := ai.GetCommitMessage(string(output))
+	messageStatus := ai.GetCommitMessage(string(output))
+	if messageStatus != "Ok" {
+		fmt.Println("Something went wrong please try again")
+		return
+	}
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-
-	fmt.Println(commitMessage)
 
 }
