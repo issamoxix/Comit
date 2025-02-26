@@ -66,13 +66,7 @@ func main() {
 	}
 
 	if len(os.Args) > 1 && os.Args[1] == "help" {
-		fmt.Println(`Usage: comit [command]
-			
-	Commands:
-	  update   : To update the app
-	  version  : To see the version of the app
-	  -b       : To generate branch name
-	  help     : To see this help message`)
+		fmt.Println("Usage: comit [command]\nCommands: \n\tupdate   : To update the app\n\tversion  : To see the version of the app\n\t-b       : To generate branch name\n\thelp     : To see this help message")
 		return
 	}
 
