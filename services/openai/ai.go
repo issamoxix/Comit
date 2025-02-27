@@ -12,7 +12,6 @@ import (
 )
 
 type commitResponse struct {
-	// change the message type to a table of string
 	Message []string `json:"message"`
 }
 
@@ -67,11 +66,8 @@ func GetCommitMessage(content string) string {
 		return "Error: " + err.Error()
 	}
 
-	// declaring a table to store the commit messages
 	var commitMessages []string
-	// geting the messages form the response and adding it to the commitMessages
 	commitMessages = append(commitMessages, data.Message...)
-	// calling the function to select the commit type and passing the commitMessages
 	SelectCommitType(commitMessages)
 
 	return ""
@@ -131,7 +127,7 @@ func SelectCommitType(commitMessages []string) string {
 		fmt.Println("Prompt failed:", err)
 		return ""
 	}
-	// runing the commit that the user selected {result}
+	
 	cmd := exec.Command("sh", "-c", fmt.Sprintf("git commit -m %q", result))
 	fmt.Printf("You executed: git commit -m %q\n", result)
 	_, err = cmd.Output()

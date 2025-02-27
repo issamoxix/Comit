@@ -77,7 +77,6 @@ func main() {
 		return
 	}
 
-	// GetCommitMessage function do not return nothing know we call inside of it SelectCommitType function
 	ai.GetCommitMessage(string(output))
 	if err != nil {
 		fmt.Println(err)
