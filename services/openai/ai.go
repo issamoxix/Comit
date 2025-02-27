@@ -36,19 +36,16 @@ func GetCommitMessage(content string) string {
 
 	jsonData, err := json.Marshal(payload)
 	if err != nil {
-		fmt.Println("Error encoding JSON:", err)
 		return "Error: " + err.Error()
 	}
 
 	resp, err := http.Post(url, "application/json", bytes.NewBuffer(jsonData))
 
 	if err != nil {
-		fmt.Println(err)
 		return "Error: " + err.Error()
 	}
 
 	if resp.StatusCode != 200 {
-		fmt.Println("Error: " + resp.Status)
 		return "Error: " + resp.Status
 	}
 
@@ -56,13 +53,11 @@ func GetCommitMessage(content string) string {
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		fmt.Println(err)
 		return "Error: " + err.Error()
 	}
 
 	var data commitResponse
 	if err := json.Unmarshal(body, &data); err != nil {
-		fmt.Println(err)
 		return "Error: " + err.Error()
 	}
 
