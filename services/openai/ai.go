@@ -2,13 +2,11 @@ package ai
 
 import (
 	"bytes"
+	"commit_helper/services/utils"
 	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
-	"os/exec"
-
-	"github.com/manifoldco/promptui"
 )
 
 type commitResponse struct {
@@ -61,7 +59,7 @@ func GetCommitMessage(content string) string {
 		return "Error: " + err.Error()
 	}
 
-	if err := SelectCommitType(data.Message); err != nil {
+	if err := utils.SelectCommitMessage(data.Message); err != nil {
 		return "Error: " + err.Error()
 	}
 
@@ -108,25 +106,4 @@ func GetBranchNames(context string) string {
 		fmt.Println(branch)
 	}
 	return ""
-}
-
-func SelectCommitType(commitMessages []string) error {
-
-	prompt := promptui.Select{
-		Label: "Select commit message",
-		Items: commitMessages,
-	}
-
-	_, result, err := prompt.Run()
-	if err != nil {
-		return err
-	}
-
-	cmd := exec.Command("sh", "-c", fmt.Sprintf("git commit -m %q", result))
-	fmt.Printf("You executed: git commit -m %q\n", result)
-	_, err = cmd.Output()
-	if err != nil {
-		return err
-	}
-	return nil
 }
