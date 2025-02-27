@@ -61,9 +61,7 @@ func GetCommitMessage(content string) string {
 		return "Error: " + err.Error()
 	}
 
-	var commitMessages []string
-	commitMessages = append(commitMessages, data.Message...)
-	SelectCommitType(commitMessages)
+	SelectCommitType(data.Message)
 
 	return "Ok"
 }
