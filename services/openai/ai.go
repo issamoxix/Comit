@@ -61,7 +61,9 @@ func GetCommitMessage(content string) string {
 		return "Error: " + err.Error()
 	}
 
-	SelectCommitType(data.Message)
+	if err := SelectCommitType(data.Message); err != nil {
+		return "Error: " + err.Error()
+	}
 
 	return "Ok"
 }
@@ -108,7 +110,7 @@ func GetBranchNames(context string) string {
 	return ""
 }
 
-func SelectCommitType(commitMessages []string) string {
+func SelectCommitType(commitMessages []string) error {
 
 	prompt := promptui.Select{
 		Label: "Select commit message",
@@ -117,16 +119,14 @@ func SelectCommitType(commitMessages []string) string {
 
 	_, result, err := prompt.Run()
 	if err != nil {
-		fmt.Println("Prompt failed:", err)
-		return ""
+		return err
 	}
 
 	cmd := exec.Command("sh", "-c", fmt.Sprintf("git commit -m %q", result))
 	fmt.Printf("You executed: git commit -m %q\n", result)
 	_, err = cmd.Output()
 	if err != nil {
-		fmt.Println(err)
-		return "Error: " + err.Error()
+		return err
 	}
-	return ""
+	return nil
 }
