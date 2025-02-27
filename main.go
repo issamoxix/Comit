@@ -45,45 +45,46 @@ func selfUpdate() error {
 
 func main() {
 
-	if len(os.Args) > 1 && os.Args[1] == "update" {
-		err := selfUpdate()
-		if err != nil {
-			fmt.Println("Update failed:", err)
-		} else {
-			fmt.Println("Successfully updated to the latest version.")
+	if len(os.Args) > 1 {
+		switch os.Args[1] {
+		case "update":
+			err := selfUpdate()
+			if err != nil {
+				fmt.Println("Update failed:", err)
+			} else {
+				fmt.Println("Successfully updated to the latest version.")
+			}
+			return
+
+		case "version":
+			fmt.Printf("Version: %s", utils.Version)
+			return
+
+		case "-b":
+			ai.GetBranchNames(os.Args[2])
+			return
+
+		case "help":
+			fmt.Println("Usage: comit [command]\nCommands: \n\tupdate   : To update the app\n\tversion  : To see the version of the app\n\t-b       : To generate branch name\n\thelp     : To see this help message")
+			return
 		}
-		return
-	}
-
-	if len(os.Args) > 1 && os.Args[1] == "version" {
-		fmt.Printf("Version: %s", utils.Version)
-		return
-	}
-
-	if len(os.Args) > 1 && os.Args[1] == "-b" {
-		ai.GetBranchNames(os.Args[2])
-		return
-	}
-
-	if len(os.Args) > 1 && os.Args[1] == "help" {
-		fmt.Println("Usage: comit [command]\nCommands: \n\tupdate   : To update the app\n\tversion  : To see the version of the app\n\t-b       : To generate branch name\n\thelp     : To see this help message")
-		return
 	}
 
 	cmd := exec.Command("git", "--no-pager", "diff", "--staged")
 	output, err := cmd.Output()
-	if len(string(output)) == 0 {
-		fmt.Println("No staged changes found.\nPlease stage your changes and try again.")
-		return
-	}
-	messageStatus := ai.GetCommitMessage(string(output))
-	if messageStatus != "Ok" {
-		fmt.Println("Something went wrong please try again")
+	if err != nil {
+		fmt.Println(err)
 		return
 	}
 
-	if err != nil {
-		fmt.Println(err)
+	if len(output) == 0 {
+		fmt.Println("No staged changes found.\nPlease stage your changes and try again.")
+		return
+	}
+
+	messageStatus := ai.GetCommitMessage(string(output))
+	if messageStatus != "Ok" {
+		fmt.Println("Something went wrong please try again")
 		return
 	}
 }
