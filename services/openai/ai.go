@@ -6,10 +6,14 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"os/exec"
+
+	"github.com/manifoldco/promptui"
 )
 
 type commitResponse struct {
-	Message string `json:"message"`
+	// change the message type to a table of string
+	Message []string `json:"message"`
 }
 
 type RequestData struct {
@@ -62,7 +66,15 @@ func GetCommitMessage(content string) string {
 		fmt.Println(err)
 		return "Error: " + err.Error()
 	}
-	return data.Message
+
+	// declaring a table to store the commit messages
+	var commitMessages []string
+	// geting the messages form the response and adding it to the commitMessages
+	commitMessages = append(commitMessages, data.Message...)
+	// calling the function to select the commit type and passing the commitMessages
+	SelectCommitType(commitMessages)
+
+	return ""
 }
 
 func GetBranchNames(context string) string {
@@ -103,6 +115,29 @@ func GetBranchNames(context string) string {
 
 	for _, branch := range data.Branch {
 		fmt.Println(branch)
+	}
+	return ""
+}
+
+func SelectCommitType(commitMessages []string) string {
+
+	prompt := promptui.Select{
+		Label: "Select commit message",
+		Items: commitMessages,
+	}
+
+	_, result, err := prompt.Run()
+	if err != nil {
+		fmt.Println("Prompt failed:", err)
+		return ""
+	}
+	// runing the commit that the user selected {result}
+	cmd := exec.Command("sh", "-c", fmt.Sprintf("git commit -m %q", result))
+	fmt.Printf("You executed: git commit -m %q\n", result)
+	_, err = cmd.Output()
+	if err != nil {
+		fmt.Println(err)
+		return "Error: " + err.Error()
 	}
 	return ""
 }
