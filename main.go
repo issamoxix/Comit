@@ -67,6 +67,9 @@ func main() {
 		case "help":
 			fmt.Println("Usage: comit [command]\nCommands: \n\tupdate   : To update the app\n\tversion  : To see the version of the app\n\t-b       : To generate branch name\n\thelp     : To see this help message")
 			return
+		default:
+			fmt.Printf("Unknown command: %s\nUse \"comit help\" to see available commands", os.Args[1])
+			return
 		}
 	}
 
