@@ -65,7 +65,7 @@ func GetCommitMessage(content string) string {
 	commitMessages = append(commitMessages, data.Message...)
 	SelectCommitType(commitMessages)
 
-	return ""
+	return "Ok"
 }
 
 func GetBranchNames(context string) string {
@@ -122,7 +122,7 @@ func SelectCommitType(commitMessages []string) string {
 		fmt.Println("Prompt failed:", err)
 		return ""
 	}
-	
+
 	cmd := exec.Command("sh", "-c", fmt.Sprintf("git commit -m %q", result))
 	fmt.Printf("You executed: git commit -m %q\n", result)
 	_, err = cmd.Output()
