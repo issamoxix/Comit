@@ -2,7 +2,7 @@ package ai
 
 import (
 	"bytes"
-	"commit_helper/services/utils"
+	"commit_helper/services/utils/tools"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -59,7 +59,7 @@ func GetCommitMessage(content string) string {
 		return "Error: " + err.Error()
 	}
 
-	if err := utils.SelectCommitMessage(data.Message); err != nil {
+	if err := tools.SelectCommitMessage(data.Message); err != nil {
 		return "Error: " + err.Error()
 	}
 
