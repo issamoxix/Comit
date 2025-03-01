@@ -3,6 +3,7 @@ package main
 import (
 	ai "commit_helper/services/openai"
 	"commit_helper/services/utils"
+	"commit_helper/services/utils/tools"
 	"fmt"
 	"net/http"
 	"os"
@@ -85,7 +86,7 @@ func main() {
 		return
 	}
 
-	messageStatus := ai.GetCommitMessage(string(output))
+	messageStatus := ai.GetCommitMessage(string(output), tools.RealSelector{})
 	if messageStatus != "Ok" {
 		fmt.Println("Something went wrong please try again")
 		return

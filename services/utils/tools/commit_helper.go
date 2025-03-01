@@ -7,7 +7,9 @@ import (
 	"github.com/manifoldco/promptui"
 )
 
-func SelectCommitMessage(commitMessages []string) error {
+type RealSelector struct{}
+
+func (RealSelector) SelectCommitMessage(commitMessages []string) error {
 
 	prompt := promptui.Select{
 		Label: "Select commit message",

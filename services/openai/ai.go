@@ -2,7 +2,6 @@ package ai
 
 import (
 	"bytes"
-	"commit_helper/services/utils/tools"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -25,8 +24,13 @@ type BranchResponse struct {
 	Branch []string `json:"branch"`
 }
 
-func GetCommitMessage(content string) string {
-	url := "https://comit.issamcloud.com"
+var url = "https://comit.issamcloud.com"
+
+type CommitMessageSelector interface {
+	SelectCommitMessage(messages []string) error
+}
+
+func GetCommitMessage(content string, selector CommitMessageSelector) string {
 
 	payload := RequestData{
 		Code: content,
@@ -59,7 +63,7 @@ func GetCommitMessage(content string) string {
 		return "Error: " + err.Error()
 	}
 
-	if err := tools.SelectCommitMessage(data.Message); err != nil {
+	if err := selector.SelectCommitMessage(data.Message); err != nil {
 		return "Error: " + err.Error()
 	}
 
@@ -67,7 +71,7 @@ func GetCommitMessage(content string) string {
 }
 
 func GetBranchNames(context string) string {
-	url := "https://comit.issamcloud.com/branch"
+	url = url + "/branch"
 	payload := RequestBranchName{
 		Context: context,
 	}
