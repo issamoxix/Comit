@@ -10,23 +10,23 @@ import (
 )
 
 func main() {
-	latestVersion := utils.GetLatestVersion()
-	if strings.Compare(latestVersion, utils.Version) == -1 {
-		fmt.Printf("🚀 A new version (%s) is available! Please update.\n", utils.Version)
-	}
+	messages := make(chan string)
+	go func() {
+		latestVersion := utils.GetLatestVersion()
+		if strings.Compare(latestVersion, utils.Version) == -1 {
+			messages <- "🚀 A new version (%s) is available! Please update."
+		}
+	}()
+	msg := <-messages
+	fmt.Println(msg)
 	if len(os.Args) > 1 {
 		switch os.Args[1] {
 		case "update":
-			if latestVersion == utils.Version {
-				fmt.Println("You already have the latest version.")
-				return
+			err := utils.SelfUpdate()
+			if err != nil {
+				fmt.Println("Update failed:", err)
 			} else {
-				err := utils.SelfUpdate()
-				if err != nil {
-					fmt.Println("Update failed:", err)
-				} else {
-					fmt.Println("Successfully updated to the latest version.")
-				}
+				fmt.Println("Successfully updated to the latest version.")
 			}
 			return
 

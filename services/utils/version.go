@@ -49,6 +49,11 @@ func SelfUpdate() error {
 	fmt.Println("Checking for updates...")
 	latestVersion := GetLatestVersion()
 
+	if latestVersion == Version {
+		fmt.Println("You already have the latest version.")
+		return nil
+	}
+
 	var fileName string
 	switch runtime.GOOS {
 	case "windows":
