@@ -16,6 +16,10 @@ type RequestData struct {
 	Code string `json:"code"`
 }
 
+type RequestAgentResponse struct {
+	Prompt string `json:"prompt"`
+}
+
 type RequestBranchName struct {
 	Context string `json:"context"`
 }
@@ -110,4 +114,43 @@ func GetBranchNames(context string) string {
 		fmt.Println(branch)
 	}
 	return ""
+}
+
+func GetPromptResponse(prompt string) {
+	url = url + "/agent"
+	payload := RequestAgentResponse{
+		Prompt: prompt,
+	}
+	jsonData, err := json.Marshal(payload)
+	if err != nil {
+		fmt.Println("Error encoding JSON:", err)
+		return
+	}
+	resp, err := http.Post(url, "application/json", bytes.NewBuffer(jsonData))
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	if resp.StatusCode != 200 {
+		fmt.Println("Error: " + resp.Status)
+		return
+	}
+
+	defer resp.Body.Close()
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	var data RequestAgentResponse
+	if err := json.Unmarshal(body, &data); err != nil {
+		fmt.Println(err)
+		return
+	}
+	green := "\033[32m"
+	reset := "\033[0m"
+	fmt.Println(green + data.Prompt + reset)
+	return
 }
