@@ -35,30 +35,28 @@ func (RealSelector) SelectCommitMessage(commitMessages []string) error {
 	return nil
 }
 
-func CheckStage() string {
+func CheckStage() (string, error) {
 
 	cmd := exec.Command("git", "--no-pager", "diff", "--staged")
 	output, err := cmd.Output()
 	if err != nil {
-		fmt.Println(err)
-		return ""
+		return "", fmt.Errorf("failed to check staged changes: %v", err)
 	}
 
 	if len(output) == 0 {
-		fmt.Println("No staged changes found.\nPlease stage your changes and try again.")
-		return ""
+		return "", fmt.Errorf("no staged changes found. Please stage your changes and try again")
 	}
 
-	return string(output)
+	return string(output), nil
 }
 
 func RunCommit() {
-	stageStatus := CheckStage()
-	if stageStatus == "" {
+	output, err := CheckStage()
+	if err != nil {
+		fmt.Println("Error:", err)
 		return
 	}
-
-	messageStatus := ai.GetCommitMessage(CheckStage(), RealSelector{})
+	messageStatus := ai.GetCommitMessage(output, RealSelector{})
 	if messageStatus != "Ok" {
 		fmt.Println("Something went wrong please try again")
 		return
