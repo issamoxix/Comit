@@ -1,0 +1,50 @@
+name: Go Build and Release
+
+on:
+  push:
+    tags:
+      - '*' 
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Go
+      uses: actions/setup-go@v3
+      with:
+        go-version: '1.23' 
+
+    - name: Cache Go modules
+      uses: actions/cache@v2
+      with:
+        path: ~/.cache/go-build
+        key: ${{ runner.os }}-go-${{ hashFiles('**/go.mod') }}
+        restore-keys: |
+          ${{ runner.os }}-go-
+
+    - name: Install dependencies
+      run: go mod download
+
+    - name: Build Go binary for Windows (exe)
+      run: go build -ldflags "-s -w" -o comit.exe .
+
+    - name: Build Go binary for Linux
+      run: GOOS=linux GOARCH=amd64 go build -o comitl .
+
+    - name: Build Go binary for macOS
+      run: GOOS=darwin GOARCH=amd64 go build -o comit .
+
+    - name: Create GitHub Release
+      id: release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          comit.exe
+          comitl
+          comit
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
