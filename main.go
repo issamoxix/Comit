@@ -10,6 +10,7 @@ import (
 )
 
 func main() {
+  
 	messages := make(chan string)
 	go func() {
 		latestVersion := utils.GetLatestVersion()
@@ -19,6 +20,7 @@ func main() {
 	}()
 	msg := <-messages
 	fmt.Println(msg)
+
 	if len(os.Args) > 1 {
 		switch os.Args[1] {
 		case "update":
