@@ -44,7 +44,6 @@ func selfUpdate() error {
 }
 
 func main() {
-	fmt.Println("Comit v" + utils.Version)
 	if len(os.Args) > 1 {
 		switch os.Args[1] {
 		case "update":
