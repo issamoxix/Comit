@@ -33,7 +33,7 @@ jobs:
       run: go mod download
 
     - name: Build Go binary for Windows (exe)
-      run: go build -ldflags "-s -w" -o comit.exe .
+      run: GOOS=windows GOARCH=amd64 go build -o comit.exe .
 
     - name: Build Go binary for Linux
       run: GOOS=linux GOARCH=amd64 go build -o comitl .
