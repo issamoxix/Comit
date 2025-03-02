@@ -6,12 +6,14 @@ import (
 	"commit_helper/services/utils/tools"
 	"fmt"
 	"os"
-
 	"strings"
 )
 
 func main() {
 	latestVersion := utils.GetLatestVersion()
+	if strings.Compare(latestVersion, utils.Version) == -1 {
+		fmt.Printf("🚀 A new version (%s) is available! Please update.\n", utils.Version)
+	}
 	if len(os.Args) > 1 {
 		switch os.Args[1] {
 		case "update":
@@ -30,9 +32,6 @@ func main() {
 
 		case "version":
 			fmt.Printf("Current Version: %s\n", utils.Version)
-			if strings.Compare(latestVersion, utils.Version) == -1 {
-				fmt.Printf("🚀 A new version (%s) is available! Please update.\n", utils.Version)
-			}
 			return
 
 		case "-b":
@@ -46,7 +45,7 @@ func main() {
 		case "c":
 			ai.GetPromptResponse(os.Args[2])
 			return
-      
+
 		case "-c":
 			ai.GetPromptResponse(os.Args[2])
 			return
