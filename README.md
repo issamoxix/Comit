@@ -14,7 +14,6 @@ Simplify your Git workflow with Comit!
 - Chat with an Agent
 
 ## Installation
-Download [Here](https://github.com/issamoxix/Comit/releases)  
 
 | System | Excutable | 
 | :---         |     :---:      | 
@@ -22,6 +21,7 @@ Download [Here](https://github.com/issamoxix/Comit/releases)
 | Windows | comit.exe | 
 | Linux  | comitl     |
 
+Download [Here](https://github.com/issamoxix/Comit/releases)  
 
 ## Usage
 To generate Commit message, stage the changes and the run the command below :
