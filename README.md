@@ -1,7 +1,7 @@
 # Comit
 
 ## Overview
-Comit is a powerful tool that automatically generates commit messages based on staged changes in a Git repository. <br>
+Comit is a powerful tool that automatically generates commit messages based on staged changes in a Git repository. 
 It analyzes diffs to create structured and meaningful commit messages, helping maintain consistency in your commit history. <br>
 Additional features include automatic branch name generation and an AI-powered chat assistant for coding-related queries. <br>
 Simplify your Git workflow with Comit!
