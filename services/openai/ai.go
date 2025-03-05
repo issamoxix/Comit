@@ -110,8 +110,10 @@ func GetBranchNames(context string) string {
 		return "Error: " + err.Error()
 	}
 
+	fmt.Println("\nBranches:")
+
 	for _, branch := range data.Branch {
-		fmt.Println(branch)
+		fmt.Printf("  - " + branch + "\n")
 	}
 	return ""
 }
