@@ -5,58 +5,37 @@ import (
 	"commit_helper/services/utils"
 	"commit_helper/services/utils/tools"
 	"fmt"
-	"net/http"
 	"os"
-	"runtime"
-
-	"github.com/inconshreveable/go-update"
 )
 
-var UpdateLink = "https://github.com/issamoxix/Comit/releases/download/%s/%s"
-
-func selfUpdate() error {
-	fmt.Println("Checking for updates...")
-	updateVersion := utils.GetVersion()
-	var fileName string
-	switch runtime.GOOS {
-	case "windows":
-		fileName = "comit.exe"
-	case "darwin":
-		fileName = "comit"
-	default:
-		return fmt.Errorf("unsupported operating system: %s", runtime.GOOS)
-	}
-
-	latestBinaryURL := fmt.Sprintf(UpdateLink, updateVersion, fileName)
-	resp, err := http.Get(latestBinaryURL)
-	if err != nil {
-		return fmt.Errorf("failed to download update: %v", err)
-	}
-	defer resp.Body.Close()
-
-	err = update.Apply(resp.Body, update.Options{})
-	if err != nil {
-		return fmt.Errorf("failed to apply update: %v", err)
-	}
-
-	fmt.Println("Update successful!")
-	return nil
-}
-
 func main() {
+
+	messages := make(chan string)
+	go func() {
+		latestVersion := utils.GetLatestVersion()
+		if latestVersion > utils.Version {
+			messages <- fmt.Sprintf("🚀 A new version (%s) is available! Please update.", latestVersion)
+		}
+		close(messages)
+	}()
+	msg := <-messages
+	if msg != "" {
+		fmt.Println(msg)
+	}
+
 	if len(os.Args) > 1 {
 		switch os.Args[1] {
 		case "update", "u", "-u", "--update":
-			err := selfUpdate()
+			err := utils.SelfUpdate()
 			if err != nil {
 				fmt.Println("Update failed:", err)
 			} else {
 				fmt.Println("Successfully updated to the latest version.")
 			}
 			return
-
 		case "version", "v", "-v", "--version":
-			fmt.Printf("Version: %s", utils.Version)
+			fmt.Printf("Current Version: %s", utils.Version)
+
 			return
 
 		case "-b":
@@ -69,6 +48,7 @@ func main() {
 		case "-c", "c":
 			ai.GetPromptResponse(os.Args[2])
 			return
+
 		default:
 			fmt.Printf("Unknown command: %s\nUse \"comit help\" to see available commands", os.Args[1])
 			return
