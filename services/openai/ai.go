@@ -166,14 +166,12 @@ func GetPromptResponse(prompt string) {
 			continue
 		}
 		if strings.Contains(line, "```") && len(line) == 3 {
-			// fmt.Println(strings.Join(lines[codeStartIndex:index], "\n"))
 			err := quick.Highlight(os.Stdout, strings.Join(lines[codeStartIndex:index], "\n"), language, "terminal16m", "monokai")
 			if err != nil {
 				fmt.Println("Error:", err)
 			}
 			codeStartIndex = 0
 			continue
-			// codeSnippets = append(codeSnippets, strings.Join(lines[codeStartIndex:index], "\n"))
 		}
 		if codeStartIndex > 0 && index >= codeStartIndex {
 			continue
