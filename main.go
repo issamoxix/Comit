@@ -6,17 +6,17 @@ import (
 	"commit_helper/services/utils/tools"
 	"fmt"
 	"os"
-	"strings"
 )
 
 func main() {
-  
+
 	messages := make(chan string)
 	go func() {
 		latestVersion := utils.GetLatestVersion()
-		if strings.Compare(latestVersion, utils.Version) == -1 {
-			messages <- "🚀 A new version (%s) is available! Please update."
+		if latestVersion > utils.Version {
+			messages <- fmt.Sprintf("🚀 A new version (%s) is available! Please update.", latestVersion)
 		}
+		close(messages)
 	}()
 	msg := <-messages
 	fmt.Println(msg)
