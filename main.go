@@ -25,32 +25,27 @@ func main() {
 
 	if len(os.Args) > 1 {
 		switch os.Args[1] {
-		case "update":
-			err := utils.SelfUpdate()
+		case "update", "u", "-u", "--update":
+			err := selfUpdate()
 			if err != nil {
 				fmt.Println("Update failed:", err)
 			} else {
 				fmt.Println("Successfully updated to the latest version.")
 			}
 			return
+		case "version", "v", "-v", "--version":
+			fmt.Printf("Current Version: %s", utils.Version)
 
-		case "version":
-			fmt.Printf("Current Version: %s\n", utils.Version)
 			return
 
 		case "-b":
 			ai.GetBranchNames(os.Args[2])
 			return
 
-		case "help":
+		case "help", "h", "-h", "--help":
 			fmt.Println("Usage: comit [command]\nCommands: \n\tupdate   : To update the app\n\tversion  : To see the version of the app\n\t-b       : To generate branch name\n\thelp     : To see this help message")
 			return
-
-		case "c":
-			ai.GetPromptResponse(os.Args[2])
-			return
-
-		case "-c":
+		case "-c", "c":
 			ai.GetPromptResponse(os.Args[2])
 			return
 
