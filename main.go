@@ -26,7 +26,7 @@ func main() {
 	if len(os.Args) > 1 {
 		switch os.Args[1] {
 		case "update", "u", "-u", "--update":
-			err := selfUpdate()
+			err := utils.SelfUpdate()
 			if err != nil {
 				fmt.Println("Update failed:", err)
 			} else {
