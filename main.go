@@ -19,7 +19,9 @@ func main() {
 		close(messages)
 	}()
 	msg := <-messages
-	fmt.Println(msg)
+	if msg != "" {
+		fmt.Println(msg)
+	}
 
 	if len(os.Args) > 1 {
 		switch os.Args[1] {
