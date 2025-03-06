@@ -15,7 +15,7 @@ type VersionResponse struct {
 }
 
 func GetLatestVersion() string {
-	resp, err := http.Get(VersionURL)
+	resp, err := http.Get(ComitURL + "/version")
 	if err != nil {
 		return Version
 	}
@@ -70,5 +70,6 @@ func SelfUpdate() (string, error) {
 	if err != nil {
 		return "", fmt.Errorf("failed to apply update: %v", err)
 	}
+	fmt.Println("Successfully updated to the latest version.")
 	return "Ok", nil
 }
