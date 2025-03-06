@@ -154,11 +154,11 @@ func GetPromptResponse(prompt string) {
 		fmt.Println(err)
 		return
 	}
-  
 	lines := strings.Split(data.Prompt, "\n")
 	var codeStartIndex int
 	var language string
 	for index, line := range lines {
+		line = strings.TrimSpace(line)
 		if strings.Contains(line, "```") && len(line) > 3 {
 			codeStartIndex = index + 1
 			language = line[3:]
