@@ -41,7 +41,13 @@ func main() {
 			return
 
 		case "help", "h", "-h", "--help":
-			fmt.Println("Usage: comit [command]\nCommands: \n\tupdate   : To update the app\n\tversion  : To see the version of the app\n\t-b       : To generate branch name\n\thelp     : To see this help message")
+			fmt.Println("Usage: comit [command]\n" +
+				"Commands:\n" +
+				"    update, u, -u, --update  	: Update the application to the latest version.\n" +
+				"    version, v, -v, --version	: Display the current version of the application.\n" +
+				"    -b <arg>                 	: Generate branch name using the given argument.\n" +
+				"    -c, c <arg>              	: Get a prompt response based on the given argument.\n" +
+				"    help, h, -h, --help      	: Show this help message.")
 			return
 		case "-c", "c":
 			ai.GetPromptResponse(os.Args[2])
