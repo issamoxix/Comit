@@ -4,6 +4,7 @@ import (
 	ai "commit_helper/services/openai"
 	"fmt"
 	"os/exec"
+	"runtime"
 
 	"github.com/manifoldco/promptui"
 )
@@ -26,7 +27,17 @@ func (RealSelector) SelectCommitMessage(commitMessages []string) error {
 		RunCommit()
 		return nil
 	}
-	cmd := exec.Command("sh", "-c", fmt.Sprintf("git commit -m %q", result))
+
+	var cmd *exec.Cmd
+
+	switch runtime.GOOS {
+	case "windows":
+		cmd = exec.Command("powershell", "-Command", fmt.Sprintf("git commit -m %q", result))
+	case "darwin":
+		cmd = exec.Command("sh", "-c", fmt.Sprintf("git commit -m %q", result))
+	default:
+		cmd = exec.Command("powershell", "-Command", fmt.Sprintf("git commit -m %q", result))
+	}
 	fmt.Printf("You executed: git commit -m %q\n", result)
 	_, err = cmd.Output()
 	if err != nil {
