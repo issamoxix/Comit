@@ -7,6 +7,10 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"os"
+	"strings"
+
+	"github.com/alecthomas/chroma/quick"
 )
 
 type commitResponse struct {
@@ -150,7 +154,28 @@ func GetPromptResponse(prompt string) {
 		fmt.Println(err)
 		return
 	}
-	green := "\033[32m"
-	reset := "\033[0m"
-	fmt.Println(green + data.Prompt + reset)
+  
+	lines := strings.Split(data.Prompt, "\n")
+	var codeStartIndex int
+	var language string
+	for index, line := range lines {
+		if strings.Contains(line, "```") && len(line) > 3 {
+			codeStartIndex = index + 1
+			language = line[3:]
+			continue
+		}
+		if strings.Contains(line, "```") && len(line) == 3 {
+			err := quick.Highlight(os.Stdout, strings.Join(lines[codeStartIndex:index], "\n"), language, "terminal16m", "monokai")
+			if err != nil {
+				fmt.Println("Error:", err)
+			}
+			codeStartIndex = 0
+			continue
+		}
+		if codeStartIndex > 0 && index >= codeStartIndex {
+			continue
+		}
+		fmt.Println(line)
+	}
+	return
 }
