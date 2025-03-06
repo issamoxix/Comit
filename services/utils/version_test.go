@@ -12,9 +12,8 @@ type VersionResponseType struct {
 }
 
 func TestVersionApi(t *testing.T) {
-	url := "https://comit.issamcloud.com/version"
 
-	resp, err := http.Get(url)
+	resp, err := http.Get(VersionURL)
 	if err != nil {
 		t.Fatal(err)
 	}

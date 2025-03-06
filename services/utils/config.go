@@ -14,6 +14,12 @@ type Config struct {
 var Version = "0.6.5"
 var Envs = initConfig()
 
+var (
+	VersionURL = "https://comit.issamcloud.com/version"
+	UpdateLink = "https://github.com/issamoxix/Comit/releases/download/%s/%s"
+	ComitURL   = "https://comit.issamcloud.com"
+)
+
 func initConfig() Config {
 	godotenv.Load()
 	return Config{

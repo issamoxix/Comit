@@ -14,11 +14,6 @@ type VersionResponse struct {
 	Version string `json:"version"`
 }
 
-const (
-	VersionURL = "https://comit.issamcloud.com/version"
-	UpdateLink = "https://github.com/issamoxix/Comit/releases/download/%s/%s"
-)
-
 func GetLatestVersion() string {
 	resp, err := http.Get(VersionURL)
 	if err != nil {
