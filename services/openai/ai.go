@@ -2,6 +2,7 @@ package ai
 
 import (
 	"bytes"
+	"commit_helper/services/utils"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -32,8 +33,6 @@ type BranchResponse struct {
 	Branch []string `json:"branch"`
 }
 
-var url = "https://comit.issamcloud.com"
-
 type CommitMessageSelector interface {
 	SelectCommitMessage(messages []string) error
 }
@@ -49,7 +48,7 @@ func GetCommitMessage(content string, selector CommitMessageSelector) string {
 		return "Error: " + err.Error()
 	}
 
-	resp, err := http.Post(url, "application/json", bytes.NewBuffer(jsonData))
+	resp, err := http.Post(utils.ComitURL, "application/json", bytes.NewBuffer(jsonData))
 
 	if err != nil {
 		return "Error: " + err.Error()
@@ -79,7 +78,7 @@ func GetCommitMessage(content string, selector CommitMessageSelector) string {
 }
 
 func GetBranchNames(context string) string {
-	url = url + "/branch"
+	var url = utils.ComitURL + "/branch"
 	payload := RequestBranchName{
 		Context: context,
 	}
@@ -123,7 +122,7 @@ func GetBranchNames(context string) string {
 }
 
 func GetPromptResponse(prompt string) {
-	url = url + "/agent"
+	var url = utils.ComitURL + "/agent"
 	payload := RequestAgentResponse{
 		Prompt: prompt,
 	}
@@ -155,7 +154,7 @@ func GetPromptResponse(prompt string) {
 		fmt.Println(err)
 		return
 	}
-
+  
 	lines := strings.Split(data.Prompt, "\n")
 	var codeStartIndex int
 	var language string

@@ -14,13 +14,8 @@ type VersionResponse struct {
 	Version string `json:"version"`
 }
 
-const (
-	VersionURL = "https://comit.issamcloud.com/version"
-	UpdateLink = "https://github.com/issamoxix/Comit/releases/download/%s/%s"
-)
-
 func GetLatestVersion() string {
-	resp, err := http.Get(VersionURL)
+	resp, err := http.Get(ComitURL + "/version")
 	if err != nil {
 		return Version
 	}
@@ -45,13 +40,13 @@ func GetLatestVersion() string {
 	return versionResponse.Version
 }
 
-func SelfUpdate() error {
+func SelfUpdate() (string, error) {
 	fmt.Println("Checking for updates...")
 	latestVersion := GetLatestVersion()
 
 	if latestVersion == Version {
 		fmt.Println("You already have the latest version.")
-		return nil
+		return "", nil
 	}
 
 	var fileName string
@@ -61,19 +56,20 @@ func SelfUpdate() error {
 	case "darwin":
 		fileName = "comit"
 	default:
-		return fmt.Errorf("unsupported operating system: %s", runtime.GOOS)
+		return "", fmt.Errorf("unsupported operating system: %s", runtime.GOOS)
 	}
 
 	latestBinaryURL := fmt.Sprintf(UpdateLink, latestVersion, fileName)
 	resp, err := http.Get(latestBinaryURL)
 	if err != nil {
-		return fmt.Errorf("failed to download update: %v", err)
+		return "", fmt.Errorf("failed to download update: %v", err)
 	}
 	defer resp.Body.Close()
 
 	err = update.Apply(resp.Body, update.Options{})
 	if err != nil {
-		return fmt.Errorf("failed to apply update: %v", err)
+		return "", fmt.Errorf("failed to apply update: %v", err)
 	}
-	return nil
+	fmt.Println("Successfully updated to the latest version.")
+	return "Ok", nil
 }

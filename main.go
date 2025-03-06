@@ -26,16 +26,14 @@ func main() {
 	if len(os.Args) > 1 {
 		switch os.Args[1] {
 		case "update", "u", "-u", "--update":
-			err := utils.SelfUpdate()
+			_, err := utils.SelfUpdate()
 			if err != nil {
 				fmt.Println("Update failed:", err)
-			} else {
-				fmt.Println("Successfully updated to the latest version.")
+				return
 			}
 			return
 		case "version", "v", "-v", "--version":
 			fmt.Printf("Current Version: %s", utils.Version)
-
 			return
 
 		case "-b":

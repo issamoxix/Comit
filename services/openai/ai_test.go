@@ -1,6 +1,7 @@
 package ai
 
 import (
+	"commit_helper/services/utils"
 	"errors"
 	"fmt"
 	"net/http"
@@ -101,7 +102,7 @@ func TestGetCommitMessage(t *testing.T) {
 					return tt.mockSelectErr
 				},
 			}
-			url = server.URL
+			utils.ComitURL = server.URL
 			// Call GetCommitMessage with the test server URL and mock tool
 			got := GetCommitMessage(tt.content, mockTool)
 
