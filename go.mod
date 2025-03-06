@@ -4,7 +4,6 @@ go 1.21.0
 
 require (
 	github.com/inconshreveable/go-update v0.0.0-20160112193335-8152e7eb6ccf
-	github.com/joho/godotenv v1.5.1
 	github.com/manifoldco/promptui v0.9.0
 	github.com/stretchr/testify v1.10.0
 )
