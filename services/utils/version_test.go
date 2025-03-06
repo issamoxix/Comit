@@ -13,7 +13,7 @@ type VersionResponseType struct {
 
 func TestVersionApi(t *testing.T) {
 
-	resp, err := http.Get(VersionURL)
+	resp, err := http.Get(ComitURL + "/version")
 	if err != nil {
 		t.Fatal(err)
 	}
