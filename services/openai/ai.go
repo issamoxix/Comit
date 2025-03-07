@@ -157,6 +157,7 @@ func GetLivePromptResponse() {
 		fmt.Print("\nSomething else? (Type 'q' to quit): ")
 	}
 }
+
 func ApiResponse(prompt string, context string) string {
 	var url = utils.ComitURL + context
 	payload := RequestAgentResponse{
@@ -192,11 +193,13 @@ func ApiResponse(prompt string, context string) string {
 	}
 	return data.Prompt
 }
+
 func PretterPromptResponse(lines []string) {
 	var codeStartIndex int
 	var language string
 
 	for index, line := range lines {
+		line = strings.TrimSpace(line)
 		if strings.Contains(line, "```") && len(line) > 3 {
 			codeStartIndex = index + 1
 			language = line[3:]
@@ -216,6 +219,7 @@ func PretterPromptResponse(lines []string) {
 		fmt.Println(line)
 	}
 }
+
 func GenerateComitId() string {
 	now := time.Now()
 	timestamp := fmt.Sprintf("%d", now.Unix())
