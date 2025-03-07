@@ -1,14 +1,17 @@
 package ai
 
 import (
+	"bufio"
 	"bytes"
 	"commit_helper/services/utils"
 	"encoding/json"
 	"fmt"
 	"io"
+	"math/rand"
 	"net/http"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/alecthomas/chroma/quick"
 )
@@ -122,23 +125,56 @@ func GetBranchNames(context string) string {
 }
 
 func GetPromptResponse(prompt string) {
-	var url = utils.ComitURL + "/agent"
+	var context = "/agent"
+	data := ApiResponse(prompt, context)
+	if data == "" {
+		fmt.Println("something went wrong please try again")
+	}
+	lines := strings.Split(data, "\n")
+	PretterPromptResponse(lines)
+	return
+}
+
+func GetLivePromptResponse() {
+	comitId := GenerateComitId()
+	context := "/live?comitId=" + comitId
+	fmt.Print("Hi! What would you like to do? (Type 'q' to quit): ")
+	for {
+		reader := bufio.NewReader(os.Stdin)
+		input, _ := reader.ReadString('\n')
+		input = strings.TrimSpace(input)
+		if input == "q" {
+			fmt.Println("You chose to quit. Goodbye!")
+			break
+		}
+		data := ApiResponse(input, context)
+		if data == "" {
+			fmt.Println("something went wrong please try again")
+		}
+		lines := strings.Split(data, "\n")
+		PretterPromptResponse(lines)
+
+		fmt.Print("\nSomething else? (Type 'q' to quit): ")
+	}
+}
+func ApiResponse(prompt string, context string) string {
+	var url = utils.ComitURL + context
 	payload := RequestAgentResponse{
 		Prompt: prompt,
 	}
 	jsonData, err := json.Marshal(payload)
 	if err != nil {
 		fmt.Println("Error encoding JSON:", err)
-		return
+		return ""
 	}
 	resp, err := http.Post(url, "application/json", bytes.NewBuffer(jsonData))
 	if err != nil {
 		fmt.Println(err)
-		return
+		return ""
 	}
 	if resp.StatusCode != 200 {
 		fmt.Println("Error: " + resp.Status)
-		return
+		return ""
 	}
 
 	defer resp.Body.Close()
@@ -146,18 +182,20 @@ func GetPromptResponse(prompt string) {
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		fmt.Println(err)
-		return
+		return ""
 	}
 
 	var data RequestAgentResponse
 	if err := json.Unmarshal(body, &data); err != nil {
 		fmt.Println(err)
-		return
+		return ""
 	}
-  
-	lines := strings.Split(data.Prompt, "\n")
+	return data.Prompt
+}
+func PretterPromptResponse(lines []string) {
 	var codeStartIndex int
 	var language string
+
 	for index, line := range lines {
 		if strings.Contains(line, "```") && len(line) > 3 {
 			codeStartIndex = index + 1
@@ -177,5 +215,16 @@ func GetPromptResponse(prompt string) {
 		}
 		fmt.Println(line)
 	}
-	return
+}
+func GenerateComitId() string {
+	now := time.Now()
+	timestamp := fmt.Sprintf("%d", now.Unix())
+	letters := "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+	randSource := rand.NewSource(time.Now().UnixNano())
+	r := rand.New(randSource)
+	suffix := make([]byte, 3)
+	for i := range suffix {
+		suffix[i] = letters[r.Intn(len(letters))]
+	}
+	return timestamp + string(suffix)
 }
