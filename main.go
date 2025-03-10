@@ -54,7 +54,7 @@ func main() {
 			ai.GetPromptResponse(os.Args[2])
 			return
 
-		case "-cl", "cl":
+		case "-l", "l", "--live", "live":
 			ai.GetLivePromptResponse()
 			return
 
