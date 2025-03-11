@@ -47,7 +47,7 @@ func main() {
 				"    version, v, -v, --version	: Display the current version of the application.\n" +
 				"    -b <arg>                 	: Generate branch name using the given argument.\n" +
 				"    -c, c <arg>              	: Get a prompt response based on the given argument.\n" +
-				"    -cl, cl                  	: Get a live prompt response.\n" +
+				"    -l, l, live, --live       	: Get a live prompt response.\n" +
 				"    help, h, -h, --help      	: Show this help message.")
 			return
 		case "-c", "c":
