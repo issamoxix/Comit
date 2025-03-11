@@ -152,7 +152,7 @@ func GetLivePromptResponse() {
 			fmt.Println("something went wrong please try again")
 		}
 		lines := strings.Split(data, "\n")
-		fmt.Println("\n")
+		fmt.Println("")
 		PretterPromptResponse(lines)
 		fmt.Print("\n(Type 'q' to quit): ")
 	}
