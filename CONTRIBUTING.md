@@ -18,8 +18,8 @@ Welcome! 🎉 We're excited you're interested in contributing to this project. P
 2. **Clone** your fork:
 
    ```bash
-   git clone https://github.com/your-username/your-repo-name.git
-   cd your-repo-name
+   git clone https://github.com/issamoxix/Comit.git
+   cd Comit
    ```
 
 3. **Install dependencies** (if any):
