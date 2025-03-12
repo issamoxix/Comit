@@ -1,4 +1,4 @@
-# Contributing to [Your Project Name]
+# Contributing
 
 Welcome! 🎉 We're excited you're interested in contributing to this project. Please take a moment to review this document to make the process smooth for everyone.
 
