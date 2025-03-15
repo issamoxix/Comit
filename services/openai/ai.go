@@ -136,8 +136,10 @@ func GetPromptResponse(prompt string) {
 }
 
 func GetLivePromptResponse(token string) {
-	comitId := GenerateComitId()
-	context := "/live?comitId=" + comitId
+	if token == "default" {
+		token = GenerateComitId()
+	}
+	context := "/live?token=" + token
 	fmt.Print("Hi! What would you like to do? (Type 'q' to quit): ")
 	for {
 		reader := bufio.NewReader(os.Stdin)
