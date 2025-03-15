@@ -136,7 +136,7 @@ func GetPromptResponse(prompt string) {
 }
 
 func GetLivePromptResponse(token string) {
-	context := "/live?token=" + token
+	context := "/live"
 	fmt.Print("Hi! What would you like to do? (Type 'q' to quit): ")
 	for {
 		reader := bufio.NewReader(os.Stdin)
