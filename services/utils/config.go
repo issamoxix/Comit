@@ -1,6 +1,6 @@
 package utils
 
-var Version = "0.7.4"
+var Version = "0.8.1"
 
 var (
 	UpdateLink = "https://github.com/issamoxix/Comit/releases/download/%s/%s"
