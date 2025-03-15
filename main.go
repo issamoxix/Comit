@@ -3,6 +3,7 @@ package main
 import (
 	ai "commit_helper/services/openai"
 	"commit_helper/services/utils"
+	"commit_helper/services/utils/auth"
 	"commit_helper/services/utils/tools"
 	"fmt"
 	"os"
@@ -48,14 +49,35 @@ func main() {
 				"    -b <arg>                 	: Generate branch name using the given argument.\n" +
 				"    -c, c <arg>              	: Get a prompt response based on the given argument.\n" +
 				"    -cl, cl                  	: Get a live prompt response.\n" +
+				"    login, -login, --login   	: Login to the application.\n" +
 				"    help, h, -h, --help      	: Show this help message.")
 			return
+
 		case "-c", "c":
 			ai.GetPromptResponse(os.Args[2])
 			return
 
-		case "-cl", "cl":
-			ai.GetLivePromptResponse()
+		case "-l", "l":
+			token, err := auth.GetToken()
+			if err != nil {
+				fmt.Println("Something went wrong please try again")
+				return
+			}
+			if token == "" {
+				fmt.Println("Please login first using \"comit login <token>\"")
+				return
+			}
+			ai.GetLivePromptResponse(token)
+			return
+
+		case "login", "-login", "--login":
+			auth.StoreToken(os.Args[2])
+			token, err := auth.GetToken()
+			if err != nil {
+				fmt.Println("Something went wrong please try again")
+				return
+			}
+			fmt.Println("Login successful! Token stored. ", token)
 			return
 
 		default:

@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"bytes"
 	"commit_helper/services/utils"
+	"commit_helper/services/utils/auth"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -132,10 +133,9 @@ func GetPromptResponse(prompt string) {
 	}
 	lines := strings.Split(data, "\n")
 	PretterPromptResponse(lines)
-	return
 }
 
-func GetLivePromptResponse() {
+func GetLivePromptResponse(token string) {
 	comitId := GenerateComitId()
 	context := "/live?comitId=" + comitId
 	fmt.Print("Hi! What would you like to do? (Type 'q' to quit): ")
@@ -158,7 +158,11 @@ func GetLivePromptResponse() {
 	}
 }
 func ApiResponse(prompt string, context string) string {
-	var url = utils.ComitURL + context
+	token, _ := auth.GetToken()
+	if token == "" {
+		token = "default"
+	}
+	var url = utils.ComitURL + context + "?token=" + token
 	payload := RequestAgentResponse{
 		Prompt: prompt,
 	}
