@@ -41,8 +41,8 @@ type CommitMessageSelector interface {
 	SelectCommitMessage(messages []string) error
 }
 
-func GetCommitMessage(content string, selector CommitMessageSelector) string {
-
+func GetCommitMessage(content string, selector CommitMessageSelector, token string) string {
+	var url = utils.ComitURL + "/commit" + "?token=" + token
 	payload := RequestData{
 		Code: content,
 	}
@@ -52,7 +52,7 @@ func GetCommitMessage(content string, selector CommitMessageSelector) string {
 		return "Error: " + err.Error()
 	}
 
-	resp, err := http.Post(utils.ComitURL, "application/json", bytes.NewBuffer(jsonData))
+	resp, err := http.Post(url, "application/json", bytes.NewBuffer(jsonData))
 
 	if err != nil {
 		return "Error: " + err.Error()
@@ -136,9 +136,6 @@ func GetPromptResponse(prompt string) {
 }
 
 func GetLivePromptResponse(token string) {
-	if token == "default" {
-		token = GenerateComitId()
-	}
 	context := "/live?token=" + token
 	fmt.Print("Hi! What would you like to do? (Type 'q' to quit): ")
 	for {

@@ -78,8 +78,8 @@ func main() {
 				return
 			}
 			fmt.Println("Login successful! Token stored. ", token)
-      return
-      
+			return
+
 		default:
 			fmt.Printf("Unknown command: %s\nUse \"comit help\" to see available commands", os.Args[1])
 			return
