@@ -44,20 +44,20 @@ func main() {
 		case "help", "h", "-h", "--help":
 			fmt.Println("Usage: comit [command]\n" +
 				"Commands:\n" +
-				"    update, u, -u, --update  	: Update the application to the latest version.\n" +
-				"    version, v, -v, --version	: Display the current version of the application.\n" +
-				"    -b <arg>                 	: Generate branch name using the given argument.\n" +
-				"    -c, c <arg>              	: Get a prompt response based on the given argument.\n" +
-				"    -cl, cl                  	: Get a live prompt response.\n" +
-				"    login, -login, --login   	: Login to the application.\n" +
-				"    help, h, -h, --help      	: Show this help message.")
+				"    update, u, -u, --update  	    : Update the application to the latest version.\n" +
+				"    version, v, -v, --version	    : Display the current version of the application.\n" +
+				"    -b <arg>                 	    : Generate branch name using the given argument.\n" +
+				"    -c, c <arg>              	    : Get a prompt response based on the given argument.\n" +
+				"    login, -login, --login <token> : Login to the application.\n" +
+				"    -l, l, live, --live       	    : Get a live prompt response.\n" +
+				"    help, h, -h, --help      	    : Show this help message.")
 			return
 
 		case "-c", "c":
 			ai.GetPromptResponse(os.Args[2])
 			return
 
-		case "-l", "l":
+		case "-l", "l", "--live", "live":
 			token, err := auth.GetToken()
 			if err != nil {
 				fmt.Println("Something went wrong please try again")
@@ -78,8 +78,8 @@ func main() {
 				return
 			}
 			fmt.Println("Login successful! Token stored. ", token)
-			return
-
+      return
+      
 		default:
 			fmt.Printf("Unknown command: %s\nUse \"comit help\" to see available commands", os.Args[1])
 			return

@@ -152,11 +152,12 @@ func GetLivePromptResponse(token string) {
 			fmt.Println("something went wrong please try again")
 		}
 		lines := strings.Split(data, "\n")
+		fmt.Println("")
 		PretterPromptResponse(lines)
-
-		fmt.Print("\nSomething else? (Type 'q' to quit): ")
+		fmt.Print("\n(Type 'q' to quit): ")
 	}
 }
+
 func ApiResponse(prompt string, context string) string {
 	token, _ := auth.GetToken()
 	if token == "" {
@@ -196,11 +197,13 @@ func ApiResponse(prompt string, context string) string {
 	}
 	return data.Prompt
 }
+
 func PretterPromptResponse(lines []string) {
 	var codeStartIndex int
 	var language string
 
 	for index, line := range lines {
+		line = strings.TrimSpace(line)
 		if strings.Contains(line, "```") && len(line) > 3 {
 			codeStartIndex = index + 1
 			language = line[3:]
@@ -220,6 +223,7 @@ func PretterPromptResponse(lines []string) {
 		fmt.Println(line)
 	}
 }
+
 func GenerateComitId() string {
 	now := time.Now()
 	timestamp := fmt.Sprintf("%d", now.Unix())
