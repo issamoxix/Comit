@@ -104,7 +104,7 @@ func TestGetCommitMessage(t *testing.T) {
 			}
 			utils.ComitURL = server.URL
 			// Call GetCommitMessage with the test server URL and mock tool
-			got := GetCommitMessage(tt.content, mockTool)
+			got := GetCommitMessage(tt.content, mockTool, "test_token")
 
 			// Validate result
 			fmt.Println("got: ", got)
