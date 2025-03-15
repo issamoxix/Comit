@@ -48,7 +48,7 @@ func main() {
 				"    version, v, -v, --version	    : Display the current version of the application.\n" +
 				"    -b <arg>                 	    : Generate branch name using the given argument.\n" +
 				"    -c, c <arg>              	    : Get a prompt response based on the given argument.\n" +
-				"    login, -login, --login <token> : Login to the application.\n" +
+				"    login, -login, --login <token>  : Login to the application.\n" +
 				"    -l, l, live, --live       	    : Get a live prompt response.\n" +
 				"    help, h, -h, --help      	    : Show this help message.")
 			return
@@ -60,11 +60,11 @@ func main() {
 		case "-l", "l", "--live", "live":
 			token, err := auth.GetToken()
 			if err != nil {
-				fmt.Println("Something went wrong please try again")
+				fmt.Println("You are not logged in. Please login first using \"comit login <token>\" \n\nUse \"comit help\" to see available commands")
 				return
 			}
 			if token == "" {
-				fmt.Println("Please login first using \"comit login <token>\"")
+				fmt.Println("Please login first using \"comit login <token>\" \n\nUse \"comit help\" to see available commands")
 				return
 			}
 			ai.GetLivePromptResponse(token)
@@ -78,8 +78,8 @@ func main() {
 				return
 			}
 			fmt.Println("Login successful! Token stored. ", token)
-      return
-      
+			return
+
 		default:
 			fmt.Printf("Unknown command: %s\nUse \"comit help\" to see available commands", os.Args[1])
 			return
