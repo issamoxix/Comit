@@ -3,6 +3,7 @@ package main
 import (
 	ai "commit_helper/services/openai"
 	"commit_helper/services/utils"
+	"commit_helper/services/utils/auth"
 	"commit_helper/services/utils/tools"
 	"fmt"
 	"os"
@@ -43,19 +44,40 @@ func main() {
 		case "help", "h", "-h", "--help":
 			fmt.Println("Usage: comit [command]\n" +
 				"Commands:\n" +
-				"    update, u, -u, --update  	: Update the application to the latest version.\n" +
-				"    version, v, -v, --version	: Display the current version of the application.\n" +
-				"    -b <arg>                 	: Generate branch name using the given argument.\n" +
-				"    -c, c <arg>              	: Get a prompt response based on the given argument.\n" +
-				"    -l, l, live, --live       	: Get a live prompt response.\n" +
-				"    help, h, -h, --help      	: Show this help message.")
+				"    update, u, -u, --update  	    : Update the application to the latest version.\n" +
+				"    version, v, -v, --version	    : Display the current version of the application.\n" +
+				"    -b <arg>                 	    : Generate branch name using the given argument.\n" +
+				"    -c, c <arg>              	    : Get a prompt response based on the given argument.\n" +
+				"    login, -login, --login <token>  : Login to the application.\n" +
+				"    -l, l, live, --live       	    : Get a live prompt response.\n" +
+				"    help, h, -h, --help      	    : Show this help message.")
 			return
+
 		case "-c", "c":
 			ai.GetPromptResponse(os.Args[2])
 			return
 
 		case "-l", "l", "--live", "live":
-			ai.GetLivePromptResponse()
+			token, err := auth.GetToken()
+			if err != nil {
+				fmt.Println("You are not logged in. Please login first using \"comit login <token>\" \n\nUse \"comit help\" to see available commands")
+				return
+			}
+			if token == "" {
+				fmt.Println("Please login first using \"comit login <token>\" \n\nUse \"comit help\" to see available commands")
+				return
+			}
+			ai.GetLivePromptResponse(token)
+			return
+
+		case "login", "-login", "--login":
+			auth.StoreToken(os.Args[2])
+			token, err := auth.GetToken()
+			if err != nil {
+				fmt.Println("Something went wrong please try again")
+				return
+			}
+			fmt.Println("Login successful! Token stored. ", token)
 			return
 
 		default:

@@ -2,6 +2,7 @@ package tools
 
 import (
 	ai "commit_helper/services/openai"
+	"commit_helper/services/utils/auth"
 	"fmt"
 	"os/exec"
 	"runtime"
@@ -67,7 +68,11 @@ func RunCommit() {
 		fmt.Println("Error:", err)
 		return
 	}
-	messageStatus := ai.GetCommitMessage(output, RealSelector{})
+	token, _ := auth.GetToken()
+	if token == "" {
+		token = "default"
+	}
+	messageStatus := ai.GetCommitMessage(output, RealSelector{}, token)
 	if messageStatus != "Ok" {
 		fmt.Println("Something went wrong please try again")
 		return

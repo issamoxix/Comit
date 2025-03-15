@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"bytes"
 	"commit_helper/services/utils"
+	"commit_helper/services/utils/auth"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -40,8 +41,8 @@ type CommitMessageSelector interface {
 	SelectCommitMessage(messages []string) error
 }
 
-func GetCommitMessage(content string, selector CommitMessageSelector) string {
-
+func GetCommitMessage(content string, selector CommitMessageSelector, token string) string {
+	var url = utils.ComitURL + "/commit" + "?token=" + token
 	payload := RequestData{
 		Code: content,
 	}
@@ -51,7 +52,7 @@ func GetCommitMessage(content string, selector CommitMessageSelector) string {
 		return "Error: " + err.Error()
 	}
 
-	resp, err := http.Post(utils.ComitURL, "application/json", bytes.NewBuffer(jsonData))
+	resp, err := http.Post(url, "application/json", bytes.NewBuffer(jsonData))
 
 	if err != nil {
 		return "Error: " + err.Error()
@@ -132,12 +133,10 @@ func GetPromptResponse(prompt string) {
 	}
 	lines := strings.Split(data, "\n")
 	PretterPromptResponse(lines)
-	return
 }
 
-func GetLivePromptResponse() {
-	comitId := GenerateComitId()
-	context := "/live?comitId=" + comitId
+func GetLivePromptResponse(token string) {
+	context := "/live?token=" + token
 	fmt.Print("Hi! What would you like to do? (Type 'q' to quit): ")
 	for {
 		reader := bufio.NewReader(os.Stdin)
@@ -159,7 +158,11 @@ func GetLivePromptResponse() {
 }
 
 func ApiResponse(prompt string, context string) string {
-	var url = utils.ComitURL + context
+	token, _ := auth.GetToken()
+	if token == "" {
+		token = "default"
+	}
+	var url = utils.ComitURL + context + "?token=" + token
 	payload := RequestAgentResponse{
 		Prompt: prompt,
 	}
