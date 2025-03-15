@@ -1,8 +1,8 @@
 package utils
 
-var Version = "0.8.2"
+var Version = "0.8.3"
 
 var (
 	UpdateLink = "https://github.com/issamoxix/Comit/releases/download/%s/%s"
-	ComitURL   = "https://api.comit.dev/actions"
+	ComitURL   = "http://localhost:8000/actions"
 )

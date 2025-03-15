@@ -137,6 +137,7 @@ func GetPromptResponse(prompt string) {
 
 func GetLivePromptResponse(token string) {
 	context := "/live"
+	context_id := []string{GenerateComitId()}
 	fmt.Print("Hi! What would you like to do? (Type 'q' to quit): ")
 	for {
 		reader := bufio.NewReader(os.Stdin)
@@ -146,7 +147,7 @@ func GetLivePromptResponse(token string) {
 			fmt.Println("You chose to quit. Goodbye!")
 			break
 		}
-		data := ApiResponse(input, context)
+		data := ApiResponse(input, context, context_id...)
 		if data == "" {
 			fmt.Println("something went wrong please try again")
 		}
@@ -157,12 +158,17 @@ func GetLivePromptResponse(token string) {
 	}
 }
 
-func ApiResponse(prompt string, context string) string {
+func ApiResponse(prompt string, context string, context_id ...string) string {
 	token, _ := auth.GetToken()
 	if token == "" {
 		token = "default"
 	}
 	var url = utils.ComitURL + context + "?token=" + token
+
+	if context_id != nil {
+		url += "&context_id=" + context_id[0]
+	}
+
 	payload := RequestAgentResponse{
 		Prompt: prompt,
 	}
