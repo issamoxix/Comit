@@ -7,34 +7,12 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"math/rand"
 	"net/http"
 	"os"
 	"strings"
-	"time"
 
 	"github.com/alecthomas/chroma/quick"
 )
-
-type commitResponse struct {
-	Message []string `json:"message"`
-}
-
-type RequestData struct {
-	Code string `json:"code"`
-}
-
-type RequestAgentResponse struct {
-	Prompt string `json:"prompt"`
-}
-
-type RequestBranchName struct {
-	Context string `json:"context"`
-}
-
-type BranchResponse struct {
-	Branch []string `json:"branch"`
-}
 
 type CommitMessageSelector interface {
 	SelectCommitMessage(messages []string) error
@@ -218,17 +196,4 @@ func PretterPromptResponse(lines []string) {
 		}
 		fmt.Println(line)
 	}
-}
-
-func GenerateComitId() string {
-	now := time.Now()
-	timestamp := fmt.Sprintf("%d", now.Unix())
-	letters := "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
-	randSource := rand.NewSource(time.Now().UnixNano())
-	r := rand.New(randSource)
-	suffix := make([]byte, 3)
-	for i := range suffix {
-		suffix[i] = letters[r.Intn(len(letters))]
-	}
-	return timestamp + string(suffix)
 }
