@@ -13,6 +13,10 @@ import (
 type RealSelector struct{}
 
 func (RealSelector) SelectCommitMessage(commitMessages []string) error {
+	if len(commitMessages) == 0 {
+		RunCommit()
+		return nil
+	}
 
 	prompt := promptui.Select{
 		Label: "Select commit message",
