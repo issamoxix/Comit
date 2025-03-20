@@ -14,6 +14,11 @@ type RealSelector struct{}
 
 func (RealSelector) SelectCommitMessage(commitMessages []string) error {
 
+	if len(commitMessages) == 0 || allEmpty(commitMessages) {
+		RunCommit()
+		return nil
+	}
+
 	prompt := promptui.Select{
 		Label: "Select commit message",
 		Items: append([]string{"Refresh"}, commitMessages...),
@@ -77,4 +82,13 @@ func RunCommit() {
 		fmt.Println("Something went wrong please try again")
 		return
 	}
+}
+
+func allEmpty(messages []string) bool {
+	for _, msg := range messages {
+		if msg != "" {
+			return false
+		}
+	}
+	return true
 }
