@@ -38,7 +38,7 @@ func main() {
 			return
 
 		case "-b":
-			ai.GetBranchNames(os.Args[2])
+			tools.RunBranch(os.Args[2])
 			return
 
 		case "help", "h", "-h", "--help":
