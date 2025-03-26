@@ -52,6 +52,45 @@ func (RealSelector) SelectCommitMessage(commitMessages []string) error {
 	return nil
 }
 
+func (RealSelector) SelectBranchMessage(branchMessages []string, context string) error {
+	if len(branchMessages) == 0 || allEmpty(branchMessages) {
+		RunBranch(context)
+		return nil
+	}
+
+	prompt := promptui.Select{
+		Label: "Select commit message",
+		Items: append([]string{"Refresh"}, branchMessages...),
+	}
+
+	_, result, err := prompt.Run()
+	if err != nil {
+		return err
+	}
+
+	if result == "Refresh" {
+		RunBranch(context)
+		return nil
+	}
+
+	var cmd *exec.Cmd
+
+	switch runtime.GOOS {
+	case "windows":
+		cmd = exec.Command("powershell", "-Command", fmt.Sprintf("git checkout -b %q", result))
+	case "darwin":
+		cmd = exec.Command("sh", "-c", fmt.Sprintf("git checkout -b %q", result))
+	default:
+		cmd = exec.Command("powershell", "-Command", fmt.Sprintf("git checkout -b %q", result))
+	}
+	fmt.Printf("You executed: git checkout -b %q\n", result)
+	_, err = cmd.Output()
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func CheckStage() (string, error) {
 
 	cmd := exec.Command("git", "--no-pager", "diff", "--staged")
@@ -65,6 +104,14 @@ func CheckStage() (string, error) {
 	}
 
 	return string(output), nil
+}
+
+func RunBranch(context string) {
+	messageStatus := ai.GetBranchNames(context, RealSelector{})
+	if messageStatus != "Ok" {
+		fmt.Println("Something went wrong please try again")
+		return
+	}
 }
 
 func RunCommit() {
