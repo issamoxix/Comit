@@ -59,7 +59,7 @@ func (RealSelector) SelectBranchMessage(branchMessages []string, context string)
 	}
 
 	prompt := promptui.Select{
-		Label: "Select Branch message",
+		Label: "Select branch message",
 		Items: append([]string{"Refresh"}, branchMessages...),
 	}
 
