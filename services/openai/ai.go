@@ -41,6 +41,10 @@ type CommitMessageSelector interface {
 	SelectCommitMessage(messages []string) error
 }
 
+type BranchSelector interface {
+	SelectBranchMessage(messages []string, context string) error
+}
+
 func GetCommitMessage(content string, selector CommitMessageSelector, token string) string {
 	var url = utils.ComitURL + "/commit" + "?token=" + token
 	payload := RequestData{
@@ -81,7 +85,7 @@ func GetCommitMessage(content string, selector CommitMessageSelector, token stri
 	return "Ok"
 }
 
-func GetBranchNames(context string) string {
+func GetBranchNames(context string, selector BranchSelector) string {
 	var url = utils.ComitURL + "/branch"
 	payload := RequestBranchName{
 		Context: context,
@@ -117,12 +121,10 @@ func GetBranchNames(context string) string {
 		return "Error: " + err.Error()
 	}
 
-	fmt.Println("\nBranches:")
-
-	for _, branch := range data.Branch {
-		fmt.Printf("  - " + branch + "\n")
+	if err := selector.SelectBranchMessage(data.Branch, context); err != nil {
+		return "Error: " + err.Error()
 	}
-	return ""
+	return "Ok"
 }
 
 func GetPromptResponse(prompt string) {
