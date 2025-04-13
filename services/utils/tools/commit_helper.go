@@ -131,6 +131,23 @@ func RunCommit() {
 	}
 }
 
+func RunRefactor() {
+	output, err := CheckStage()
+	if err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
+	token, _ := auth.GetToken()
+	if token == "" {
+		token = "default"
+	}
+	messageStatus := ai.GetRefactorMessage(output, token)
+	if messageStatus != "Ok" {
+		fmt.Println("Something went wrong please try again")
+		return
+	}
+}
+
 func allEmpty(messages []string) bool {
 	for _, msg := range messages {
 		if msg != "" {

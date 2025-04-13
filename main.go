@@ -50,6 +50,7 @@ func main() {
 				"    -c, c <arg>              	    : Get a prompt response based on the given argument.\n" +
 				"    login, -login, --login <token>  : Login to the application.\n" +
 				"    -l, l, live, --live       	    : Get a live prompt response.\n" +
+				"    refactor, r, -r, --refactor	    : Run the refactor command.\n" +
 				"    help, h, -h, --help      	    : Show this help message.")
 			return
 
@@ -78,6 +79,10 @@ func main() {
 				return
 			}
 			fmt.Println("Login successful! Token stored. ", token)
+			return
+
+		case "refactor", "r", "-r", "--refactor":
+			tools.RunRefactor()
 			return
 
 		default:
