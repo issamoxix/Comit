@@ -21,6 +21,10 @@ type commitResponse struct {
 	Message []string `json:"message"`
 }
 
+type refactorResponse struct {
+	Message string `json:"message"`
+}
+
 type RequestData struct {
 	Code string `json:"code"`
 }
@@ -43,6 +47,44 @@ type CommitMessageSelector interface {
 
 type BranchSelector interface {
 	SelectBranchMessage(messages []string, context string) error
+}
+
+func GetRefactorMessage(content string, token string) string {
+	var url = utils.ComitURL + "/refactore" + "?token=" + token
+	payload := RequestData{
+		Code: content,
+	}
+
+	jsonData, err := json.Marshal(payload)
+	if err != nil {
+		return "Error: " + err.Error()
+	}
+
+	resp, err := http.Post(url, "application/json", bytes.NewBuffer(jsonData))
+
+	if err != nil {
+		return "Error: " + err.Error()
+	}
+
+	if resp.StatusCode != 200 {
+		return "Error: " + resp.Status
+	}
+
+	defer resp.Body.Close()
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return "Error: " + err.Error()
+	}
+
+	var data refactorResponse
+	if err := json.Unmarshal(body, &data); err != nil {
+		return "Error: " + err.Error()
+	}
+
+	lines := strings.Split(data.Message, "\n")
+	PretterPromptResponse(lines)
+	return "Ok"
 }
 
 func GetCommitMessage(content string, selector CommitMessageSelector, token string) string {
